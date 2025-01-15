@@ -1,4 +1,5 @@
 import { Client, Guild, GatewayIntentBits, ChannelType } from "discord.js";
+import { Message } from "./types";
 
 const TOKEN = process.env.DISCORD_BOT_TOKEN!;
 
@@ -46,7 +47,32 @@ export async function sendMessage(channelId: string, content: string) {
   }
 }
 
-export async function getMessages(channelId: string) {
+export async function getMessage(
+  channelId: string,
+  messageId: string,
+): Promise<Message | null> {
+  const client = await getClient();
+  const guild = await getGuild(client);
+  const channel = guild.channels.cache.get(channelId);
+  if (!channel || channel.type !== ChannelType.GuildText) return null;
+
+  const message = await channel.messages.fetch(messageId);
+  if (!message) return null;
+
+  return {
+    id: message.id,
+    content: message.content,
+    author: {
+      id: message.author.id,
+      username: message.author.username,
+    },
+    createdTimestamp: message.createdTimestamp,
+  };
+}
+
+export async function getMessages(
+  channelId: string,
+): Promise<Message[] | null> {
   const client = await getClient();
   const guild = await getGuild(client);
   const channel = guild.channels.cache.get(channelId);
@@ -55,7 +81,15 @@ export async function getMessages(channelId: string) {
   const messages = await channel.messages.fetch({ limit: 10 });
   if (!messages) return null;
 
-  return messages;
+  return messages.map((message) => ({
+    id: message.id,
+    content: message.content,
+    author: {
+      id: message.author.id,
+      username: message.author.username,
+    },
+    createdTimestamp: message.createdTimestamp,
+  }));
 }
 
 export async function getGuild(client: Client): Promise<Guild> {

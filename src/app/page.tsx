@@ -1,35 +1,12 @@
 import { getMessages } from "@/utils/bot";
-import { decrypt } from "@/utils/crypto";
-import type { Message } from "@/utils/types";
-
-async function getAllMessages(): Promise<Message[]> {
-  const key = process.env.SECRET_KEY!
-  const iv = process.env.SECRET_IV!
-  const channelId = process.env.CHANNEL_ID!
-
-  const messages = await getMessages(channelId);
-  if (!messages) throw new Error("message not found");
-
-  let result: Message[] = [];
-
-  for (const message of messages.values()) {
-    result.push({
-      id: message.id,
-      author: {
-        id: message.author.id,
-        username: message.author.username,
-      },
-      content: decrypt(message.content, key, iv),
-      attachments: [],
-      createTimestamp: message.createdTimestamp,
-    });
-  }
-
-  return result;
-}
+import { decryptContent } from "@/utils/parse";
+import Link from "next/link";
 
 export default async function Home() {
-  const data = await getAllMessages();
+  const channelId = process.env.DISCORD_CHANNEL_ID!;
+  const data = await getMessages(channelId);
+
+  if (!data) throw new Error("Messages not found");
 
   return (
     <div className="min-h-dvh container mx-auto py-10 px-4">
@@ -37,9 +14,14 @@ export default async function Home() {
 
       <ul className="grid grid-cols-4 gap-4">
         {data.map((item) => (
-          <li key={item.id} className="border border-white rounded p-4">
-            <p className="text-lg mb-3 font-bold">{item.author.username}</p>
-            <p>{item.content}</p>
+          <li
+            key={item.id}
+            className="border border-white rounded p-4 cursor-pointer transition hover:border-blue-500"
+          >
+            <Link className="block w-full h-full" href={`/detail/${item.id}`}>
+              <p className="text-lg mb-3 font-bold">{item.author.username}</p>
+              <p>{decryptContent(item.content)}</p>
+            </Link>
           </li>
         ))}
       </ul>

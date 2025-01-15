@@ -5,6 +5,6 @@ export interface Message {
     username: string;
   };
   content: string;
-  attachments: unknown[];
-  createTimestamp: number;
+  attachments?: unknown[];
+  createdTimestamp: number;
 }
