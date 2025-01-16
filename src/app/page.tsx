@@ -1,5 +1,5 @@
-import { getMessages } from "@/utils/bot";
-import { decryptContent } from "@/utils/parse";
+import { getMessages } from "@/lib/bot";
+import { decryptContent } from "@/lib/parse";
 import Card from "@/components/card"
 import Link from "next/link";
 

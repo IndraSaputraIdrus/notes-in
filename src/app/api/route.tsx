@@ -1,5 +1,5 @@
-import { getMessages, sendMessage } from "@/utils/bot";
-import { decrypt, encrypt } from "@/utils/crypto";
+import { getMessages, sendMessage } from "@/lib/bot";
+import { decrypt, encrypt } from "@/lib/crypto";
 
 export const GET = async (request: Request) => {
   const key = process.env.SECRET_KEY!;
