@@ -1,5 +1,6 @@
 import { getMessages } from "@/utils/bot";
 import { decryptContent } from "@/utils/parse";
+import Card from "@/components/card"
 import Link from "next/link";
 
 export default async function Home() {
@@ -12,16 +13,15 @@ export default async function Home() {
     <div className="min-h-dvh container mx-auto py-10 px-4">
       <h1 className="text-2xl mb-5 font-semibold">My notes</h1>
 
-      <ul className="grid grid-cols-4 gap-4">
+      <ul className="grid grid-cols-1 gap-4 sm:gridllols-3 md:grid-cols-4">
         {data.map((item) => (
-          <li
-            key={item.id}
-            className="border border-white rounded p-4 cursor-pointer transition hover:border-blue-500"
-          >
-            <Link className="block w-full h-full" href={`/detail/${item.id}`}>
-              <p className="text-lg mb-3 font-bold">{item.author.username}</p>
-              <p>{decryptContent(item.content)}</p>
-            </Link>
+          <li key={item.id}>
+            <Card>
+              <Link className="block w-full h-full p-4" href={`/detail/${item.id}`}>
+                <p className="text-lg mb-3 font-bold">{item.author.username}</p>
+                <p>{decryptContent(item.content)}</p>
+              </Link>
+            </Card>
           </li>
         ))}
       </ul>
