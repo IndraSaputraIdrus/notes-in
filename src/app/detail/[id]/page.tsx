@@ -1,6 +1,7 @@
 import Card from "@/components/card";
 import { getMessage } from "@/lib/bot";
 import { decryptContent } from "@/lib/parse";
+import { formatDate } from "@/lib/utils";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -17,11 +18,11 @@ export default async function DetailsPage({ params }: Props) {
   return (
     <div className="min-h-dvh container mx-auto py-10 px-5">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-5xl font-semibold mb-5">Detail</h1>
+        <h1 className="text-5xl font-bold mb-5">Detail</h1>
         <Card className="p-4">
-          <h2 className="text-3xl">{data.author.username}</h2>
+          <h2 className="text-3xl mb-2 font-semibold">{data.author.username}</h2>
+          <p className="text-sm mb-5">{formatDate(data.createdTimestamp)}</p>
           <p className="text-xl">{decryptContent(data.content)}</p>
-          <p>{new Date(data.createdTimestamp).toLocaleString("en-US")}</p>
         </Card>
       </div>
     </div>

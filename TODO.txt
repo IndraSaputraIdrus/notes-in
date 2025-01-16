@@ -1,0 +1,4 @@
+format content nya itu
+
+@title: ini adalah title
+@content: ini adalah content
