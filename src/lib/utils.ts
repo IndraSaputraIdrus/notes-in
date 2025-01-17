@@ -1,22 +1,18 @@
-import { ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
 
-export function cn(...value: ClassValue[]) {
-  return twMerge(clsx(value));
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
 }
 
 export function formatDate(timestamp: number) {
-  const date = new Date(timestamp);
-  const formattedDate = new Intl.DateTimeFormat("en-US", {
-    weekday: "long",
-    year: "numeric",
+  const date = new Date(timestamp)
+
+  const options: Intl.DateTimeFormatOptions = {
     month: "long",
     day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
-    timeZoneName: "short",
-  }).format(date);
+    year: "numeric"
+  }
 
-  return formattedDate;
+  return date.toLocaleDateString("en-US", options)
 }

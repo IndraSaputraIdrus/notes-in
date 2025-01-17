@@ -1,7 +1,15 @@
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { getMessages } from "@/lib/bot";
+import { formatDate } from "@/lib/utils";
 import { decryptContent } from "@/lib/parse";
-import Card from "@/components/card";
-import Link from "next/link";
+import { Plus } from "lucide-react";
 
 export default async function Home() {
   const channelId = process.env.DISCORD_CHANNEL_ID!;
@@ -10,21 +18,28 @@ export default async function Home() {
   if (!data) throw new Error("Messages not found");
 
   return (
-    <div className="min-h-dvh container mx-auto py-10 px-4">
-      <h1 className="text-2xl mb-5 font-semibold">My notes</h1>
+    <div className="min-h-dvh max-w-xl mx-auto py-10 px-4">
+      <div className="flex items-center gap-5 mb-5">
+        <h1 className="text-2xl font-semibold">My notes</h1>
+        <Button variant="outline" size="icon">
+          <Plus />
+        </Button>
+      </div>
 
-      <ul className="grid grid-cols-1 gap-4 sm:gridllols-3 md:grid-cols-4">
+      <ul className="grid grid-cols-1 gap-5">
         {data.map((item) => (
           <li key={item.id}>
-            <Link
-              className="block w-full h-full transition duration-200 ease-in-out hover:opacity-50"
-              href={`/detail/${item.id}`}
-            >
-              <Card>
-                <p className="text-lg mb-3 font-bold">{item.author.username}</p>
-                <p>{decryptContent(item.content)}</p>
-              </Card>
-            </Link>
+            <Card>
+              <CardHeader>
+                <CardTitle>{item.author.username}</CardTitle>
+                <CardDescription>
+                  {formatDate(item.createdTimestamp)}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="max-w-sm truncate">
+                {decryptContent(item.content)}
+              </CardContent>
+            </Card>
           </li>
         ))}
       </ul>
